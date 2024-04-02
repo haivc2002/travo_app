@@ -3,18 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:travo_app/theme/theme_color.dart';
 import 'package:travo_app/ui/auth/register_screen.dart';
+import 'package:travo_app/ui/home_screen/home_screen.dart';
 
+import '../../model/data_use.dart';
 import '../item_widget/appbar_custom.dart';
 import '../item_widget/default_auth_bottom.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
-
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+
+  TextEditingController textData = TextEditingController(text: '');
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,6 +28,8 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             const AppbarCustom(
               textBelow: true,
+              title: 'Login',
+              subTitle: 'Hi, Welcom e back!',
             ),
             textInputCustom('Email'),
             textInputCustom('Password'),
@@ -44,15 +50,23 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ),
             ),
-            const DefaultAuthBottom(title: 'Log In',),
+            DefaultAuthBottom(title: 'Log In', router: () => HomeScreen.routeName),
             SizedBox(height: 20.h,),
             GestureDetector(
-              onTap: () {
-                Navigator.push(context, 
-                  CupertinoPageRoute(builder: (context) => const RegisterScreen())
-                );
-              },
-              child: const Text('Don’t have an account? Sign Up')
+                onTap: () {
+                  Navigator.of(context).pushNamed(RegisterScreen.routeName, arguments: DataUse('dddddddd'));
+                },
+              child: RichText(
+                text: const TextSpan(
+                  text: 'Don’t have an account?',
+                  style: TextStyle(
+                    color: ThemeColor.blackColor
+                  ),
+                  children: <TextSpan>[
+                    TextSpan(text: ' Sign Up', style: TextStyle(color: ThemeColor.purpleColor, fontWeight: FontWeight.w600)),
+                  ],
+                ),
+              )
             ),
           ],
         ),
@@ -60,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget textInputCustom(String? title) {
+  Widget textInputCustom(String? title,) {
     return Container(
       margin: const EdgeInsets.fromLTRB(20, 25, 20, 0),
       decoration: BoxDecoration(
@@ -71,6 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
         children: [
           SizedBox(height: 12.h),
           TextField(
+            controller: textData,
             decoration: InputDecoration(
               contentPadding: const EdgeInsets.symmetric(
                   vertical: 8, horizontal: 13),

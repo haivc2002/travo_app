@@ -5,7 +5,10 @@ import 'package:travo_app/theme/theme_color.dart';
 class AppbarCustom extends StatelessWidget {
   final bool textBelow;
   final bool itemRight;
-  const AppbarCustom({Key? key, this.textBelow = false, this.itemRight = false}) : super(key: key);
+  final String? title;
+  final String? subTitle;
+  final IconData? dataIcon;
+  const AppbarCustom({Key? key, this.textBelow = false, this.itemRight = false, this.title, this.subTitle, this.dataIcon}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +26,7 @@ class AppbarCustom extends StatelessWidget {
         child: Row(
           children: [
             SizedBox(width: 50.w, child: buttonBack(context)),
-            titleText('Login', 'Hi, Welcome back!', textBelow),
+            titleText(title, subTitle, textBelow),
             SizedBox(width: 50.w, child: item(context)),
           ],
         ),
@@ -65,8 +68,8 @@ class AppbarCustom extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Visibility(visible: textBelow, child: const Spacer()),
-            Text(title ?? '', style: TextStyle(fontSize: 30.sp, fontWeight: FontWeight.bold, color: ThemeColor.whiteColor),),
-            Text(subTitle ?? '', style: const TextStyle(color: ThemeColor.whiteColor)),
+            Text(title ?? '', style: TextStyle(fontSize: 30.sp, fontWeight: FontWeight.bold, color: ThemeColor.whiteColor), textAlign: TextAlign.center),
+            Text(subTitle ?? '', style: const TextStyle(color: ThemeColor.whiteColor), textAlign: TextAlign.center,),
             const SizedBox(height: 20,),
           ],
         ),
@@ -79,7 +82,6 @@ class AppbarCustom extends StatelessWidget {
       visible: itemRight,
       child: Row(
         children: [
-          const Spacer(),
           GestureDetector(
             onTap: () {
               Navigator.pop(context);
@@ -93,8 +95,8 @@ class AppbarCustom extends StatelessWidget {
                   color: ThemeColor.superWhiteColor,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Center(
-                  child: Icon(Icons.arrow_back),
+                child: Center(
+                  child: Icon(dataIcon),
                 ),
               ),
             ),

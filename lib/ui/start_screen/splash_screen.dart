@@ -1,6 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../home_screen/home_screen.dart';
 import 'onboarding.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -12,18 +14,26 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
 
-  double _containerHeight = 0;
-  double _containerHeight2 = 0;
+  final double _containerHeight = 0;
+  final double _containerHeight2 = 0;
   bool _disposed = false;
 
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 2), () {
-      setState(() {
-        _containerHeight = MediaQuery.of(context).size.height*1.2;
-        _containerHeight2 = 150;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future.delayed(const Duration(milliseconds: 2200), () async {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        bool skipScreen = prefs.getBool('skipScreen') ?? false;
+        if (!_disposed) {
+          Navigator.of(context).pushReplacement(
+            PageRouteBuilder(
+              pageBuilder: (_, __, ___) => skipScreen ? const HomeScreen() : const OnBoardingScreen(),
+              transitionDuration: const Duration(seconds: 0),
+            ),
+          );
+        }
       });
     });
   }
@@ -36,16 +46,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Future.delayed(const Duration(milliseconds: 2200), () {
-      if (!_disposed) {
-        Navigator.of(context).pushReplacement(
-          PageRouteBuilder(
-            pageBuilder: (_, __, ___) => const OnBoardingScreen(),
-            transitionDuration: const Duration(seconds: 0),
-          ),
-        );
-      }
-    });
     return Scaffold(
       body: Stack(
         children: [

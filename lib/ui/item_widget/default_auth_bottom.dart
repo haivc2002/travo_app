@@ -1,11 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travo_app/theme/theme_color.dart';
 
 class DefaultAuthBottom extends StatelessWidget {
   final String? title;
-  const DefaultAuthBottom({Key? key, required this.title}) : super(key: key);
+  final String Function() router;
+  const DefaultAuthBottom({Key? key, required this.title, required this.router}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,6 +17,16 @@ class DefaultAuthBottom extends StatelessWidget {
         child: Column(
           children: [
             GestureDetector(
+              onTap: () async {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                prefs.setBool('skipScreen', true);
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  router(),
+                      (route) => false,
+                );
+                // Navigator.pushNamedAndRemoveUntil(context, router(), (route) => false, arguments: textData);
+              },
               child: Container(
                 height: 50.h,
                 decoration: BoxDecoration(
